@@ -38,9 +38,9 @@ MITCH uses standard, fixed-width data types. All multi-byte fields MUST be encod
 All MITCH messages use a unified 8-byte header, which provides basic information about the message payload that follows. This consistent structure simplifies parsing logic.
 
 ```
-┌─────────────────────────┬──────────────────────────────────┐
+┌─────────────────┬──────────────────────────────────┐
 │ Header (8B)     │ Message Body Array (Variable)    │
-└─────────────────────────┴──────────────────────────────────┘
+└─────────────────┴──────────────────────────────────┘
 ```
 
 See `Section 5.1` for the detailed header structure.
