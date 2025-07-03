@@ -1,0 +1,39 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore Java compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignore TypeScript compiled files
+*.js
+*.d.ts
+node_modules/
+
+# Ignore C compiled files
+*.o
+*.out
+*.a
+*.so
+*.exe
+
+# Ignore C++ compiled files
+*.o
+*.out
+*.a
+*.so
+*.exe
+
+# Ignore Rust build artifacts
+/target/
+*.rlib
+
+# Ignore Go build files
+*.exe
+*.test
+*.out
+/vendor/
