@@ -1,4 +1,4 @@
-# MITCH: Light-speed, Feather-weight Market Data
+# MITCH: Ultra-light Market-Data
 
 ## Overview
 
@@ -125,7 +125,7 @@ Each implementation includes comprehensive examples demonstrating:
 
 ## License
 
-[Add your license here]
+MIT, see [./LICENSE]
 
 ## References
 
