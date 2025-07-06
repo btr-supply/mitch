@@ -59,8 +59,8 @@ The 64 bits of the Ticker ID are allocated as follows, allowing for a vast and f
 
 ```
 ┌───────────────┬───────────────────────┬───────────────────────┬───────────────────────┐
-│ Inst. Type    │ Base Asset            │ Quote Asset           │ Sub-Type              │
-│ (4 bits)      │ (20 bits)             │ (20 bits)             │ (20 bits)             │
+│ Inst. Type    │ Base Asset (class+id) │ Quote Asset (class+id)│ Sub-Type              │
+│ (4 bits)      │ 20 bits    (4+16 bits)│ 20 bits    (4+16 bits)│ (20 bits)             │
 └───────────────┴───────────────────────┴───────────────────────┴───────────────────────┘
 ```
 
@@ -119,17 +119,17 @@ Defines the type of the **base instrument** being traded.
 
 **EUR/USD Spot:**
 - Instrument Type: `0x0` (Spot)
-- Base: `hex(00111) == 0x0006F` (Forex/EUR)
-- Quote (Spot only): `hex(00461) == 0x001CD` (Forex/USD)
+- Base: `0x3` (Forex) + `111` (EUR) = `0x3006F` (Forex/EUR)
+- Quote: `0x3` (Forex) + `461` (USD) = `0x301CD` (Forex/USD)
 - Sub-Type: `0x00000`
-- **Result:** `0x00006F001CD00000` (`122046274076672` in decimal)
+- **Result:** `0x03006F301CD00000` (`216295034546290688` in decimal)
 
 **AAPL $190 Call Option (30 days) settled in USD:**
 - Instrument Type: `0x6` (Call Option)
-- Base: `hex(00831) == 0x0033F` (Equity/AAPL)
-- Quote (Spot only): `hex(00461) == 0x001CD` (Forex/USD)
+- Base: `0x0` (Equity) + `831` (AAPL) = `0x0033F` (Equity/AAPL)
+- Quote: `0x3` (Forex) + `461` (USD) = `0x301CD` (Forex/USD)
 - Sub-Type: Strike + Expiry 20bit encoding (dummy 0x00000)
-- **Result:** `0x60033F001CD00000` (`6918442722287157248` in decimal)
+- **Result:** `0x60033F301CD00000` (`6918442928445587456` in decimal)
 
 ---
 
