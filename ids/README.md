@@ -32,20 +32,20 @@ The BTR system standardizes instrument symbols by programmatically handling comm
 
 ### Automatic Prefix/Suffix Stripping Rules
 
-**Common Prefixes:** `^`, `.`, `$` (e.g., `^SPX`, `.DJI`, `$INDU`)
+**Common Prefixes:** `^`, `.`, `$`, `#` (e.g., `^SPX`, `.DJI`, `$INDU`, `#GOLD`)
 
 **Suffix Categories:**
-1. **Delimiter-Based Suffixes** (stripped when following `-`, `_`, `.`, `$`, `^`):
-   - `US`, `USD`, `USX`, `C`, `M`, `MINI`, `MICRO`, `CASH`, `SPOT` (case-insensitive)
-   - Examples: `SPX.CASH`, `DJI_MINI`, `GOLD$USD`, `NDQ-MICRO`
+1. **Delimiter-Based Suffixes** (stripped when following `-`, `_`, `.`, `$`, `^`, `#`):
+   - `US`, `USD`, `USX`, `C`, `M`, `MINI`, `MICRO`, `CASH`, `SPOT`, `ECN`, `ZERO` (case-insensitive)
+   - Examples: `SPX.CASH`, `DJI_MINI`, `GOLD$USD`, `NDQ-MICRO`, `SILVER#CASH`
 
 2. **Standalone Suffixes** (stripped regardless of delimiters):
-   - `MINI`, `MICRO`, `CASH`, `SPOT` (case-insensitive)
-   - Examples: `SPXMINI`, `DJICASH`, `GOLDSPOT`
+   - `MINI`, `MICRO`, `CASH`, `SPOT`, `ECN`, `ZERO` (case-insensitive)
+   - Examples: `SPXMINI`, `DJICASH`, `GOLDSPOT`, `SILVERECN`
 
-3. **Single Character Suffixes:** `M`, `C`, `Z`, `B`, `R`, `D`, `I`, `_`, `$`
+3. **Single Character Suffixes:** `M`, `C`, `Z`, `B`, `R`, `D`, `I`, `_`, `$`, `#`
 
-**Compound Suffix Handling:** The resolution logic runs **twice** to handle compound suffixes like `XAG.CASH` or `NDQ$MICRO`, where the first pass removes the descriptive suffix and the second pass removes the delimiter.
+**Compound Suffix Handling:** The resolution logic runs **twice** to handle compound suffixes like `XAG.CASH`, `NDQ$MICRO`, or `GOLD#SPOT`, where the first pass removes the descriptive suffix and the second pass removes the delimiter.
 
 ## Data Consistency Rules
 
