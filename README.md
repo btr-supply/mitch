@@ -7,7 +7,7 @@
 ### Key Features
 
 - **🚀 Ultra-Light**: 10-40% lighter messages than NASDAQ ITCH
-- **🔄 Transport Agnostic**: Works with TCP, UDP, file storage, message queues
+- **🔄 Transport Agnostic**: Works well over TCP (ZMQ/NATS...), UDP (KCP/MoldUDP64...), unicast/multicast/queues...
 - **🌐 Cross-Platform**: Consistent Big-Endian encoding across all platforms  
 - **📦 Multi-Language**: Native implementations in TypeScript, Python, Rust, Go, Java, C, and MQL4
 - **⚡ Performance Optimized**: Fixed-width fields, memory alignment, zero-copy parsing
@@ -92,8 +92,8 @@ mitch/
 
 ## Performance Characteristics
 
-- **Message Overhead**: Fixed 8-byte header
-- **Ticker Encoding**: Single 8-byte ID vs multiple reference lookups
+- **Message Overhead**: Fixed 8-byte header whatever the batch size
+- **Ticker Encoding**: Single 8-byte ID whatever the asset class and exchange
 - **Memory Alignment**: 32-byte body alignment for optimal access
 - **Zero-Copy**: Fixed-width fields enable direct memory mapping (flat-buffers style)
 - **Batch Support**: Predictable batching up to 255 objects per message reduces syscall overhead
@@ -133,32 +133,12 @@ MIT, see [./LICENSE]
 - [MITCH Specification](./model/README.md)
 - [Implementation Examples](./examples/README.md)
 
-# BTR MITCH Protocol Implementation
-
-This directory contains the BTR-integrated MITCH (Moded ITCH) protocol implementation for MetaTrader 4, now aligned with our production environment.
-
-## Recent Updates (Production Environment Integration)
-
-### ✅ **Model File (`model/model.mq4`)**
-- **BTR Integration**: Added full BTR currency constants, asset classes, and instrument types
-- **Legacy Compatibility**: Maintained all existing MITCH constants with BTR mappings
-- **Enhanced Structures**: Updated with proper BTR commenting and field descriptions
-- **Ticker ID Generation**: Added basic forex ticker ID generation with common currency pairs
-- **Production Alignment**: Matches `BTRMitchModel.mqh` structure and functionality
-
-### ✅ **Example File (`examples/example.mq4`)**
-- **Complete Rewrite**: Transformed from basic example to comprehensive test suite
-- **BTR Test Framework**: Integrated testing patterns from `BTRMitchTest.mq4`
-- **Production Serialization**: Robust big-endian serialization matching `BTRMitchSerializer.mqh`
-- **Performance Testing**: Added comprehensive benchmarking and validation
-- **EURUSD Specification**: Validates exact ticker ID calculation (0x03006F301CD00000)
-
 ## Key Features
 
 ### 🔧 **Core Functionality**
 - **MITCH Protocol**: Full implementation of message types (Trade, Order, Ticker, OrderBook)
 - **Big-Endian Serialization**: IEEE 754 compliant double precision encoding
-- **Timestamp Handling**: 48-bit nanosecond precision timestamps
+- **Timestamp Handling**: ITCH flavored 48-bit nanosecond server timestamps
 - **Binary I/O**: Efficient file-based message persistence
 
 ### 🧪 **Testing & Validation**
