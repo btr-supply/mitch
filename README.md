@@ -13,38 +13,6 @@
 - **⚡ Performance Optimized**: Fixed-width fields, memory alignment, zero-copy parsing
 - **🛡️ Production Ready**: Strict separation of concerns, comprehensive examples
 
-## Quick Start
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/btr-supply/mitch
-cd mitch
-```
-
-### 2. Choose Your Language Implementation
-
-Navigate to the language-specific examples:
-
-```bash
-# TypeScript/JavaScript
-cd mitch/examples && node example.ts
-
-# Python  
-cd mitch/examples && python example.py
-
-# Rust
-cd mitch/examples && cargo run example.rs
-
-# Go
-cd mitch/examples && go run example.go
-
-# Java
-cd mitch/examples && javac example.java && java example
-
-# C
-cd mitch/examples && gcc example.c -o example && ./example
-```
-
 ## MITCH Protocol Specification
 
 ### Message Structure
