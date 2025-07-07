@@ -103,31 +103,37 @@ Defines the type of the **base instrument** being traded.
 | `0x2`| Sovereign Debt        | Government bonds, treasuries       |
 | `0x3`| Forex                 | EUR, USD, JPY, GBP                 |
 | `0x4`| Commodities           | WTI, Brent, Gold, Silver           |
-| `0x5`| Precious Metals       | Gold, Silver, Platinum             |
-| `0x6`| Real Estate           | REITs, property indices            |
-| `0x7`| Crypto Assets         | BTC, ETH, USDC, SOL                |
-| `0x8`| Private Markets       | Investments in private companies   |
-| `0x9`| Collectibles          | Art, antiques, rare items          |
-| `0xA`| Infrastructure        | Investments in physical assets     |
-| `0xB`| Indices & Index Products| Market indices and related products|
-| `0xC`| Structured Products   | Financial instruments with multiple components|
-| `0xD`| Cash & Equivalents    | Cash and cash-like instruments     |
-| `0xE`| Loans & Receivables   | Debt instruments and receivables   |
-| `0xF`| *Reserved*            | *Reserved for future use*          |
+| `0x5`| Real Estate           | REITs, property indices            |
+| `0x6`| Crypto Assets         | BTC, ETH, USDC, SOL                |
+| `0x7`| Private Markets       | Investments in private companies   |
+| `0x8`| Collectibles          | Art, antiques, rare items          |
+| `0x9`| Infrastructure        | Investments in physical assets     |
+| `0xA`| Indices & Index Products| Market indices and related products|
+| `0xB`| Structured Products   | Financial instruments with multiple components|
+| `0xC`| Cash & Equivalents    | Cash and cash-like instruments     |
+| `0xD`| Loans & Receivables   | Debt instruments and receivables   |
+| `0xE`| *Reserved*            | *Reserved for future use*          |
 
 #### 4.3. Trading Pair Examples
 
 **EUR/USD Spot:**
 - Instrument Type: `0x0` (Spot)
-- Base: `0x3` (Forex) + `111` (EUR) = `0x3006F` (Forex/EUR)
-- Quote: `0x3` (Forex) + `461` (USD) = `0x301CD` (Forex/USD)
+- Base: `0x3 (Forex) + hex(111) (EUR) == 0x3006F` (Forex:EUR)
+- Quote: `0x3 (Forex) + hex(461) (USD) == 0x301CD` (Forex:USD)
 - Sub-Type: `0x00000`
 - **Result:** `0x03006F301CD00000` (`216295034546290688` in decimal)
+
+**XTI/USX CFD:**
+- Instrument Type: `0x5` (CFD)
+- Base: `0x4 (Commodities) + hex(21) (XTI == Brent) = 0x40015` (Commodities:Brent)
+- Quote: `0x3 (Forex) + hex(461) (USX stripped->USD default quote) = 0x301CD` (Forex:USD)
+- Sub-Type: `0x00000`
+- **Result:** `0x540015301CD00000` (`6052861195571953664` in decimal)
 
 **AAPL $190 Call Option (30 days) settled in USD:**
 - Instrument Type: `0x6` (Call Option)
 - Base: `0x0` (Equity) + `831` (AAPL) = `0x0033F` (Equity/AAPL)
-- Quote: `0x3` (Forex) + `461` (USD) = `0x301CD` (Forex/USD)
+- Quote: `0x3` (Forex) + `461` (USD) = `0x301CD` (Forex:USD)
 - Sub-Type: Strike + Expiry 20bit encoding (dummy 0x00000)
 - **Result:** `0x60033F301CD00000` (`6918442928445587456` in decimal)
 

@@ -1,0 +1,17 @@
+btr_id,name
+0,Spot
+1,Future
+2,Forward
+3,Swap
+4,Perpetual Swap
+5,CFD
+6,Call Option
+7,Put Option
+8,Digital Option
+9,Barrier Option
+10,Warrant
+11,Prediction Contract
+12,Structured Product
+13,*Reserved*
+14,*Reserved*
+15,*Reserved*
