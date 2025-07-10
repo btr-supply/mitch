@@ -28,9 +28,15 @@ node_modules/
 *.so
 *.exe
 
-# Ignore Rust build artifacts
-/target/
+# Start of Selection
+# Ignore build artifacts
+/target
+/build
 *.rlib
+# Exclude all nested build artifacts
+**/target
+**/build
+# End of Selection
 
 # Ignore Go build files
 *.exe
