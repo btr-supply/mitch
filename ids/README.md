@@ -1,4 +1,4 @@
-# BTR IDS Data Files
+# MITCH IDS Data Files
 
 This directory contains the core data files used for identifying and categorizing financial instruments within the BTR ecosystem.
 
@@ -7,23 +7,23 @@ This directory contains the core data files used for identifying and categorizin
 All asset data files follow a consistent three-column structure:
 
 **Standard Format:**
-- `btr_id` - Unique numeric identifier (BTR ID)
+- `mitch_id` - Unique numeric identifier (MITCH ID)
 - `name` - Full product/instrument name or description
 - `aliases` - Pipe-separated list of trading symbols and alternative names
 
 **Metadata Files Exception:**
-- `asset-classes.csv` - Only has `btr_id` and `name` (no aliases needed)
-- `instrument-types.csv` - Only has `btr_id` and `name` (no aliases needed)
-- `market-providers.csv` - Only has `btr_id` and `name` (no aliases needed)
+- `asset-classes.csv` - Only has `mitch_id` and `name` (no aliases needed)
+- `instrument-types.csv` - Only has `mitch_id` and `name` (no aliases needed)
+- `market-providers.csv` - Only has `mitch_id` and `name` (no aliases needed)
 
 ## File Structure
-- `asset-classes.csv`: Master list of asset classes and their BTR IDs
-- `instrument-types.csv`: Master list of instrument types and their BTR IDs
-- `currencies.csv`: Fiat currencies with BTR IDs and ISO codes/aliases
-- `commodities.csv`: Commodities with BTR IDs and trading symbol aliases
-- `indices.csv`: Stock indices with BTR IDs and trading symbol aliases
-- `tokens.csv`: Cryptocurrency tokens with BTR IDs and trading symbol aliases
-- `stocks.csv`: Individual stocks with BTR IDs and trading symbol aliases
+- `asset-classes.csv`: Master list of asset classes and their MITCH IDs
+- `instrument-types.csv`: Master list of instrument types and their MITCH IDs
+- `currencies.csv`: Fiat currencies with MITCH IDs and ISO codes/aliases
+- `commodities.csv`: Commodities with MITCH IDs and trading symbol aliases
+- `indices.csv`: Stock indices with MITCH IDs and trading symbol aliases
+- `tokens.csv`: Cryptocurrency tokens with MITCH IDs and trading symbol aliases
+- `stocks.csv`: Individual stocks with MITCH IDs and trading symbol aliases
 - `market-providers.csv`: Exchanges, brokers, and market data providers
 
 ## Symbol Resolution Conventions
