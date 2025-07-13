@@ -22,7 +22,7 @@ All asset data files follow a consistent three-column structure:
 - `currencies.csv`: Fiat currencies with MITCH IDs and ISO codes/aliases
 - `commodities.csv`: Commodities with MITCH IDs and trading symbol aliases
 - `indices.csv`: Stock indices with MITCH IDs and trading symbol aliases
-- `tokens.csv`: Cryptocurrency tokens with MITCH IDs and trading symbol aliases
+- `crypto-assets.csv`: Cryptocurrencies and tokens with MITCH IDs and trading symbol aliases
 - `stocks.csv`: Individual stocks with MITCH IDs and trading symbol aliases
 - `market-providers.csv`: Exchanges, brokers, and market data providers
 

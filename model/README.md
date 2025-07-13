@@ -114,7 +114,7 @@ Defines the type of the **base instrument** being traded.
 | `0xD`| Loans & Receivables   | Debt instruments and receivables   |
 | `0xE`| *Reserved*            | *Reserved for future use*          |
 
-#### 4.3. Trading Pair Examples
+#### 4.3. Ticker ID Examples
 
 **EUR/USD Spot:**
 - Instrument Type: `0x0` (Spot)
@@ -122,6 +122,20 @@ Defines the type of the **base instrument** being traded.
 - Quote: `0x3 (Forex) + hex(461) (USD) == 0x301CD` (Forex:USD)
 - Sub-Type: `0x00000`
 - **Result:** `0x03006F301CD00000` (`216295034546290688` in decimal)
+
+**EUR/USD Index:**
+- Instrument Type: `0xA` (Indices & Index Products) <-- only difference with the above ticker
+- Base: `0x3 (Forex) + hex(111) (EUR) == 0x3006F` (Forex:EUR)
+- Quote: `0x3 (Forex) + hex(461) (USD) == 0x301CD` (Forex:USD)
+- Sub-Type: `0x00000`
+- **Result:** `0xA3006F301CD00000` (`11745510080614760448` in decimal)
+
+**USDT/USD Index:**
+- Instrument Type: `0xA` (Indices & Index Products)
+- Base: `0x6 (Crypto Assets) + hex(17601) (USDT) == 0x344C1` (Crypto:EUR)
+- Quote: `0x3 (Forex) + hex(461) (USD) == 0x301CD` (Forex:USD)
+- Sub-Type: `0x00000`
+- **Result:** `0xA344C1301CD00000` (`11764740538984562688` in decimal)
 
 **XTI/USX CFD:**
 - Instrument Type: `0x5` (CFD)
