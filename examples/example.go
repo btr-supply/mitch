@@ -88,11 +88,11 @@ func UnpackMessage(data []byte) (*model.MitchHeader, []interface{}, error) {
 		var body interface{}
 		switch header.MessageType {
 		case model.MsgTypeTrade:
-			body = &model.TradeBody{}
+			body = &model.Trade{}
 		case model.MsgTypeOrder:
-			body = &model.OrderBody{}
+			body = &model.Order{}
 		case model.MsgTypeTicker:
-			body = &model.TickerBody{}
+			body = &model.Tick{}
 		case model.MsgTypeOrderBook:
 			// OrderBook is special, it's variable size, so this generic function is not suitable.
 			// A specific function should be used for it.
@@ -154,14 +154,14 @@ func main() {
 	fmt.Println("--- Running MITCH Go Example ---")
 
 	// 1. Create and pack a batch of two trades
-	trade1 := model.TradeBody{
+	trade1 := model.Trade{
 		TickerID: 1,
 		Price:    1.2345,
 		Quantity: 100,
 		TradeID:  1001,
 		Side:     model.SideBuy,
 	}
-	trade2 := model.TradeBody{
+	trade2 := model.Trade{
 		TickerID: 1,
 		Price:    1.2346,
 		Quantity: 50,
@@ -182,13 +182,13 @@ func main() {
 	}
 	fmt.Printf("Unpacked Header: %+v\n", unpackedHeader)
 	for i, body := range unpackedBodies {
-		if t, ok := body.(*model.TradeBody); ok {
+		if t, ok := body.(*model.Trade); ok {
 			fmt.Printf("Unpacked Trade %d: %+v\n", i+1, t)
 		}
 	}
 
 	// 3. Create and pack a single order
-	order := model.OrderBody{
+	order := model.Order{
 		TickerID:    2,
 		OrderID:     2001,
 		Price:       98.5,
@@ -208,7 +208,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Unpacked Header: %+v\n", unpackedHeader)
-	if o, ok := unpackedBodies[0].(*model.OrderBody); ok {
+	if o, ok := unpackedBodies[0].(*model.Order); ok {
 		fmt.Printf("Unpacked Order: %+v\n", o)
 		fmt.Printf("  -> Extracted Side: %d, Type: %d\n", model.ExtractSide(o.TypeAndSide), model.ExtractOrderType(o.TypeAndSide))
 	}

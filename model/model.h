@@ -42,7 +42,7 @@ typedef struct {
 
 // --- Body Structures (32 bytes each) ---
 
-// TradeBody (32 bytes)
+// Trade (32 bytes)
 typedef struct {
     uint64_t ticker_id;
     double   price;
@@ -50,9 +50,9 @@ typedef struct {
     uint32_t trade_id;
     uint8_t  side;         // 0: Buy, 1: Sell
     uint8_t  padding[7];   // Padding to 32 bytes
-} TradeBody;
+} Trade;
 
-// OrderBody (32 bytes)
+// Order (32 bytes)
 typedef struct {
     uint64_t ticker_id;
     uint32_t order_id;
@@ -61,18 +61,18 @@ typedef struct {
     uint8_t  type_and_side; // Bit 0: Side, Bits 1-7: Order Type
     uint8_t  expiry[6];
     uint8_t  padding;      // Padding to 32 bytes
-} OrderBody;
+} Order;
 
-// TickerBody (32 bytes)
+// Tick (32 bytes)
 typedef struct {
     uint64_t ticker_id;
     double   bid_price;
     double   ask_price;
     uint32_t bid_volume;
     uint32_t ask_volume;
-} TickerBody;
+} Tick;
 
-// OrderBookBody (Header: 32 bytes)
+// OrderBook (Header: 32 bytes)
 // Variable size: 32 bytes header + num_ticks * 4 bytes
 typedef struct {
     uint64_t ticker_id;
@@ -82,7 +82,7 @@ typedef struct {
     uint8_t  side;         // 0: Bids, 1: Asks
     uint8_t  padding[5];   // Padding to 32 bytes
     // uint32_t volumes[] follows immediately after
-} OrderBookBody;
+} OrderBook;
 
 // Volume Entry (4 bytes)
 typedef struct {
@@ -92,29 +92,29 @@ typedef struct {
 // --- Message Structures ---
 // These represent complete messages: Header + Body Array
 
-// Trade Message: Header + TradeBody[]
+// Trade Message: Header + Trade[]
 typedef struct {
     MitchHeader header;
-    TradeBody   trades[];  // Flexible array member
+    Trade   trades[];  // Flexible array member
 } TradeMessage;
 
-// Order Message: Header + OrderBody[]
+// Order Message: Header + Order[]
 typedef struct {
     MitchHeader header;
-    OrderBody   orders[];  // Flexible array member
+    Order   orders[];  // Flexible array member
 } OrderMessage;
 
-// Ticker Message: Header + TickerBody[]
+// Ticker Message: Header + Tick[]
 typedef struct {
     MitchHeader header;
-    TickerBody  tickers[];  // Flexible array member
+    Tick  tickers[];  // Flexible array member
 } TickerMessage;
 
-// Order Book Message: Header + OrderBookBody[]
-// Note: Each OrderBookBody is variable-sized
+// Order Book Message: Header + OrderBook[]
+// Note: Each OrderBook is variable-sized
 typedef struct {
     MitchHeader    header;
-    OrderBookBody  order_books[];  // Flexible array member
+    OrderBook  order_books[];  // Flexible array member
 } OrderBookMessage;
 
 // --- Utility Macros ---

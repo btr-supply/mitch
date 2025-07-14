@@ -173,10 +173,10 @@ The `Message Type` code indicates how to parse the body array that follows.
 
 | Code | Message Name            | Body Structure      | Description                           |
 |------|-------------------------|---------------------|---------------------------------------|
-| 't'  | Trade Messages          | `TradeBody[]`       | Trade executions (single or batch)    |
-| 'o'  | Order Messages          | `OrderBody[]`       | Order events (single or batch)        |
-| 's'  | Ticker Messages         | `TickerBody[]`      | Ticker snapshots (single or batch)    |
-| 'q'  | Order Book Messages     | `OrderBookBody[]`   | Order book snapshots (single or batch)|
+| 't'  | Trade Messages          | `Trade[]`       | Trade executions (single or batch)    |
+| 'o'  | Order Messages          | `Order[]`       | Order events (single or batch)        |
+| 's'  | Ticker Messages         | `Tick[]`      | Ticker snapshots (single or batch)    |
+| 'q'  | Order Book Messages     | `OrderBook[]`   | Order book snapshots (single or batch)|
 
 **Note:** Single messages have `Count = 1`, batch messages have `Count > 1`.
 
@@ -189,12 +189,12 @@ Trade messages represent executed transactions.
 #### Message Structure:
 ```
 ┌─────────────────┬──────────────────────────────┐
-│ Header (8B)     │ TradeBody Array (Count × 32B)|
+│ Header (8B)     │ Trade Array (Count × 32B)|
 └─────────────────┴──────────────────────────────┘
      Bits 0-7                Bits 8-40...
 ```
 
-#### TradeBody (32 bytes per entry):
+#### Trade (32 bytes per entry):
 
 | Field     | Offset | Size | Type  | Description                            |
 |-----------|--------|------|-------|----------------------------------------|
@@ -216,12 +216,12 @@ Order messages represent order lifecycle events (placement, modification, cancel
 #### Message Structure:
 ```
 ┌─────────────────┬──────────────────────────────┐
-│ Header (8B)     │ OrderBody Array (Count × 32B)|
+│ Header (8B)     │ Order Array (Count × 32B)|
 └─────────────────┴──────────────────────────────┘
      Bits 0-7                Bits 8-40...
 ```
 
-#### OrderBody (32 bytes per entry):
+#### Order (32 bytes per entry):
 
 | Field         | Offset | Size | Type    | Description                                    |
 |---------------|--------|------|---------|------------------------------------------------|
@@ -251,12 +251,12 @@ Ticker messages provide point-in-time bid/ask snapshots.
 #### Message Structure:
 ```
 ┌─────────────────┬───────────────────────────────┐
-│ Header (8B)     │ TickerBody Array (Count × 32B)|
+│ Header (8B)     │ Tick Array (Count × 32B)|
 └─────────────────┴───────────────────────────────┘
      Bits 0-7                Bits 8-40...
 ```
 
-#### TickerBody (32 bytes per entry):
+#### Tick (32 bytes per entry):
 
 | Field       | Offset | Size | Type  | Description                    |
 |-------------|--------|------|-------|--------------------------------|
@@ -277,12 +277,12 @@ Order book messages provide liquidity snapshots for one side of an order book.
 #### Message Structure:
 ```
 ┌─────────────────┬────────────────────────────────────┐
-│ Header (8B)     │ OrderBookBody Array (Variable)     │
+│ Header (8B)     │ OrderBook Array (Variable)     │
 └─────────────────┴────────────────────────────────────┘
      Bits 0-7                Bits 8-N...
 ```
 
-#### OrderBookBody (Variable size per entry):
+#### OrderBook (Variable size per entry):
 
 **Order Book Header (32 bytes):**
 | Field       | Offset | Size    | Type    | Description                                |
@@ -324,7 +324,7 @@ The `Type & Side` field in order messages uses the following bit layout:
 
 ### 6.2. Alignment and Performance
 
-All message bodies (`TradeBody`, `OrderBody`, `TickerBody`, and `OrderBookBody`'s header) are padded to be **32 bytes**. This ensures 8-byte alignment, which can improve performance for certain memory access patterns and zero-copy operations, at the cost of a few extra bytes.
+All message bodies (`Trade`, `Order`, `Tick`, and `OrderBook`'s header) are padded to be **32 bytes**. This ensures 8-byte alignment, which can improve performance for certain memory access patterns and zero-copy operations, at the cost of a few extra bytes.
 
 ### 6.3. Batching
 

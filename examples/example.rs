@@ -36,19 +36,19 @@ pub fn read_timestamp_48(bytes: [u8; 6]) -> u64 {
 // An enum to represent any type of unpacked message body.
 #[derive(Debug)]
 pub enum MessageBody {
-    Trade(TradeBody),
-    Order(OrderBody),
-    Ticker(TickerBody),
-    OrderBook(OrderBookBody, Vec<u32>), // Special case for variable data
+    Trade(Trade),
+    Order(Order),
+    Ticker(Tick),
+    OrderBook(OrderBook, Vec<u32>), // Special case for variable data
 }
 
 // An enum to represent a fully unpacked message.
 #[derive(Debug)]
 pub enum MitchMessage {
-    Trades(MitchHeader, Vec<TradeBody>),
-    Orders(MitchHeader, Vec<OrderBody>),
-    Tickers(MitchHeader, Vec<TickerBody>),
-    OrderBook(MitchHeader, OrderBookBody, Vec<u32>),
+    Trades(MitchHeader, Vec<Trade>),
+    Orders(MitchHeader, Vec<Order>),
+    Tickers(MitchHeader, Vec<Tick>),
+    OrderBook(MitchHeader, OrderBook, Vec<u32>),
 }
 
 // === Packing Functions ===
@@ -61,7 +61,7 @@ pub fn pack_header(header: &MitchHeader) -> [u8; 8] {
     buf
 }
 
-pub fn pack_trade_body(body: &TradeBody) -> [u8; 32] {
+pub fn pack_trade_body(body: &Trade) -> [u8; 32] {
     let mut buf = [0; 32];
     buf[0..8].copy_from_slice(&body.ticker_id.to_be_bytes());
     buf[8..16].copy_from_slice(&body.price.to_be_bytes());
@@ -71,7 +71,7 @@ pub fn pack_trade_body(body: &TradeBody) -> [u8; 32] {
     buf
 }
 
-pub fn pack_order_body(body: &OrderBody) -> [u8; 32] {
+pub fn pack_order_body(body: &Order) -> [u8; 32] {
     let mut buf = [0; 32];
     buf[0..8].copy_from_slice(&body.ticker_id.to_be_bytes());
     buf[8..12].copy_from_slice(&body.order_id.to_be_bytes());
@@ -83,7 +83,7 @@ pub fn pack_order_body(body: &OrderBody) -> [u8; 32] {
     buf
 }
 
-pub fn pack_ticker_body(body: &TickerBody) -> [u8; 32] {
+pub fn pack_ticker_body(body: &Tick) -> [u8; 32] {
     let mut buf = [0; 32];
     buf[0..8].copy_from_slice(&body.ticker_id.to_be_bytes());
     buf[8..16].copy_from_slice(&body.bid_price.to_be_bytes());
@@ -105,8 +105,8 @@ pub fn unpack_header(data: &[u8]) -> MitchHeader {
     }
 }
 
-pub fn unpack_trade_body(data: &[u8]) -> TradeBody {
-    TradeBody {
+pub fn unpack_trade_body(data: &[u8]) -> Trade {
+    Trade {
         ticker_id: u64::from_be_bytes(data[0..8].try_into().unwrap()),
         price: f64::from_be_bytes(data[8..16].try_into().unwrap()),
         quantity: u32::from_be_bytes(data[16..20].try_into().unwrap()),
@@ -116,10 +116,10 @@ pub fn unpack_trade_body(data: &[u8]) -> TradeBody {
     }
 }
 
-pub fn unpack_order_body(data: &[u8]) -> OrderBody {
+pub fn unpack_order_body(data: &[u8]) -> Order {
     let mut expiry = [0; 6];
     expiry.copy_from_slice(&data[25..31]);
-    OrderBody {
+    Order {
         ticker_id: u64::from_be_bytes(data[0..8].try_into().unwrap()),
         order_id: u32::from_be_bytes(data[8..12].try_into().unwrap()),
         price: f64::from_be_bytes(data[12..20].try_into().unwrap()),
@@ -204,7 +204,7 @@ fn main() {
 
     // 1. Create and pack a batch of two trades
     let trades = vec![
-        pack_trade_body(&TradeBody {
+        pack_trade_body(&Trade {
             ticker_id: 1,
             price: 1.2345,
             quantity: 100,
@@ -212,7 +212,7 @@ fn main() {
             side: SIDE_BUY,
             ..Default::default()
         }),
-        pack_trade_body(&TradeBody {
+        pack_trade_body(&Trade {
             ticker_id: 1,
             price: 1.2346,
             quantity: 50,

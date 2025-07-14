@@ -67,7 +67,7 @@ typedef struct {
     uint32_t trade_id;     // Unique trade identifier
     uint8_t  side;         // 0=Buy, 1=Sell
     uint8_t  padding[7];   // Zero padding for 32-byte alignment
-} TradeBody;
+} Trade;
 ```
 
 ### Order Body (32 bytes)
@@ -80,7 +80,7 @@ typedef struct {
     uint8_t  type_and_side;  // Combined: (type << 1) | side
     uint8_t  expiry[6];      // Expiration timestamp
     uint8_t  padding;        // Zero padding
-} OrderBody;
+} Order;
 ```
 
 ### Ticker Body (32 bytes)
@@ -91,7 +91,7 @@ typedef struct {
     double   ask_price;    // Best ask price
     uint32_t bid_volume;   // Bid volume
     uint32_t ask_volume;   // Ask volume
-} TickerBody;
+} Tick;
 ```
 
 ### Order Book Body (32 bytes + volumes)
@@ -104,7 +104,7 @@ typedef struct {
     uint8_t  side;          // 0=Bid, 1=Ask
     uint8_t  padding[5];    // Zero padding
     // Followed by: uint32_t volumes[num_ticks]
-} OrderBookBody;
+} OrderBook;
 ```
 
 ## Usage Examples
@@ -120,7 +120,7 @@ MitchHeader header = {
 };
 write_u48_be(header.timestamp, get_timestamp_ns());
 
-TradeBody trade = {
+Trade trade = {
     .ticker_id = 0x00006F001CD00000ULL, // EUR/USD
     .price = 1.0850,
     .quantity = 1000000, // 1.0 lot
@@ -147,7 +147,7 @@ header = MitchHeader(
     count=1
 )
 
-trade = TradeBody(
+trade = Trade(
     ticker_id=0x00006F001CD00000,  # EUR/USD
     price=1.0850,
     quantity=1000000,  # 1.0 lot
@@ -178,7 +178,7 @@ func main() {
         Count:       1,
     }
     
-    trade := &TradeBody{
+    trade := &Trade{
         TickerID: 0x00006F001CD00000, // EUR/USD
         Price:    1.0850,
         Quantity: 1000000, // 1.0 lot
@@ -187,13 +187,13 @@ func main() {
     }
     
     // Pack and send
-    message := append(PackHeader(header), PackTradeBody(trade)...)
+    message := append(PackHeader(header), PackTrade(trade)...)
     MitchSendTCP(conn, message)
     
     // Receive and parse
     received, _ := MitchRecvMessage(conn)
     receivedHeader := UnpackHeader(received[:8])
-    receivedTrade := UnpackTradeBody(received[8:40])
+    receivedTrade := UnpackTrade(received[8:40])
 }
 ```
 

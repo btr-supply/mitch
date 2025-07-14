@@ -1,6 +1,6 @@
 import * as net from 'net';
 import {
-    MitchHeader, TradeBody, OrderBody, TickerBody, OrderBookBody,
+    MitchHeader, Trade, Order, Tick, OrderBook,
     TradeMessage, OrderMessage, TickerMessage, OrderBookMessage,
     MSG_TYPE_TRADE, MSG_TYPE_ORDER, MSG_TYPE_TICKER, MSG_TYPE_ORDER_BOOK,
     SIDE_BUY, SIDE_SELL, ORDER_TYPE_MARKET, ORDER_TYPE_LIMIT,
@@ -83,9 +83,9 @@ export function unpackHeader(buffer: Uint8Array): MitchHeader {
 // === BODY PACKING/UNPACKING FUNCTIONS ===
 
 /**
- * Pack TradeBody into 32-byte buffer
+ * Pack Trade into 32-byte buffer
  */
-export function packTradeBody(trade: TradeBody): Uint8Array {
+export function packTrade(trade: Trade): Uint8Array {
     const buffer = new ArrayBuffer(32);
     const view = new DataView(buffer);
     let offset = 0;
@@ -120,11 +120,11 @@ export function packTradeBody(trade: TradeBody): Uint8Array {
 }
 
 /**
- * Unpack TradeBody from 32-byte buffer
+ * Unpack Trade from 32-byte buffer
  */
-export function unpackTradeBody(buffer: Uint8Array): TradeBody {
+export function unpackTrade(buffer: Uint8Array): Trade {
     if (buffer.length < 32) {
-        throw new Error('TradeBody buffer must be at least 32 bytes');
+        throw new Error('Trade buffer must be at least 32 bytes');
     }
     
     const view = new DataView(buffer.buffer, buffer.byteOffset);
@@ -159,9 +159,9 @@ export function unpackTradeBody(buffer: Uint8Array): TradeBody {
 }
 
 /**
- * Pack OrderBody into 32-byte buffer
+ * Pack Order into 32-byte buffer
  */
-export function packOrderBody(order: OrderBody): Uint8Array {
+export function packOrder(order: Order): Uint8Array {
     const buffer = new ArrayBuffer(32);
     const view = new DataView(buffer);
     let offset = 0;
@@ -197,11 +197,11 @@ export function packOrderBody(order: OrderBody): Uint8Array {
 }
 
 /**
- * Unpack OrderBody from 32-byte buffer
+ * Unpack Order from 32-byte buffer
  */
-export function unpackOrderBody(buffer: Uint8Array): OrderBody {
+export function unpackOrder(buffer: Uint8Array): Order {
     if (buffer.length < 32) {
-        throw new Error('OrderBody buffer must be at least 32 bytes');
+        throw new Error('Order buffer must be at least 32 bytes');
     }
     
     const view = new DataView(buffer.buffer, buffer.byteOffset);
@@ -239,9 +239,9 @@ export function unpackOrderBody(buffer: Uint8Array): OrderBody {
 }
 
 /**
- * Pack TickerBody into 32-byte buffer
+ * Pack Tick into 32-byte buffer
  */
-export function packTickerBody(ticker: TickerBody): Uint8Array {
+export function packTick(ticker: Tick): Uint8Array {
     const buffer = new ArrayBuffer(32);
     const view = new DataView(buffer);
     let offset = 0;
@@ -269,11 +269,11 @@ export function packTickerBody(ticker: TickerBody): Uint8Array {
 }
 
 /**
- * Unpack TickerBody from 32-byte buffer
+ * Unpack Tick from 32-byte buffer
  */
-export function unpackTickerBody(buffer: Uint8Array): TickerBody {
+export function unpackTick(buffer: Uint8Array): Tick {
     if (buffer.length < 32) {
-        throw new Error('TickerBody buffer must be at least 32 bytes');
+        throw new Error('Tick buffer must be at least 32 bytes');
     }
     
     const view = new DataView(buffer.buffer, buffer.byteOffset);
@@ -303,9 +303,9 @@ export function unpackTickerBody(buffer: Uint8Array): TickerBody {
 }
 
 /**
- * Pack OrderBookBody into 32-byte buffer
+ * Pack OrderBook into 32-byte buffer
  */
-export function packOrderBookBody(orderBook: OrderBookBody): Uint8Array {
+export function packOrderBook(orderBook: OrderBook): Uint8Array {
     const buffer = new ArrayBuffer(32);
     const view = new DataView(buffer);
     let offset = 0;
@@ -340,11 +340,11 @@ export function packOrderBookBody(orderBook: OrderBookBody): Uint8Array {
 }
 
 /**
- * Unpack OrderBookBody from 32-byte buffer
+ * Unpack OrderBook from 32-byte buffer
  */
-export function unpackOrderBookBody(buffer: Uint8Array): OrderBookBody {
+export function unpackOrderBook(buffer: Uint8Array): OrderBook {
     if (buffer.length < 32) {
-        throw new Error('OrderBookBody buffer must be at least 32 bytes');
+        throw new Error('OrderBook buffer must be at least 32 bytes');
     }
     
     const view = new DataView(buffer.buffer, buffer.byteOffset);
@@ -442,7 +442,7 @@ export function mitchRecvTCP(socket: net.Socket, length: number): Promise<Uint8A
  */
 export function packTradeMessage(message: TradeMessage): Uint8Array {
     const headerBuffer = packHeader(message.header);
-    const bodyBuffers = message.trades.map(trade => packTradeBody(trade));
+    const bodyBuffers = message.trades.map(trade => packTrade(trade));
     
     const totalLength = 8 + bodyBuffers.length * 32;
     const result = new Uint8Array(totalLength);
@@ -462,7 +462,7 @@ export function packTradeMessage(message: TradeMessage): Uint8Array {
  */
 export function packOrderMessage(message: OrderMessage): Uint8Array {
     const headerBuffer = packHeader(message.header);
-    const bodyBuffers = message.orders.map(order => packOrderBody(order));
+    const bodyBuffers = message.orders.map(order => packOrder(order));
     
     const totalLength = 8 + bodyBuffers.length * 32;
     const result = new Uint8Array(totalLength);
@@ -482,7 +482,7 @@ export function packOrderMessage(message: OrderMessage): Uint8Array {
  */
 export function packTickerMessage(message: TickerMessage): Uint8Array {
     const headerBuffer = packHeader(message.header);
-    const bodyBuffers = message.tickers.map(ticker => packTickerBody(ticker));
+    const bodyBuffers = message.tickers.map(ticker => packTick(ticker));
     
     const totalLength = 8 + bodyBuffers.length * 32;
     const result = new Uint8Array(totalLength);
@@ -515,7 +515,7 @@ export function packOrderBookMessage(message: OrderBookMessage): Uint8Array {
     let offset = 8;
     for (let i = 0; i < message.orderBooks.length; i++) {
         // Pack order book header
-        const bodyBuffer = packOrderBookBody(message.orderBooks[i]);
+        const bodyBuffer = packOrderBook(message.orderBooks[i]);
         result.set(bodyBuffer, offset);
         offset += 32;
         
@@ -543,10 +543,10 @@ export async function mitchRecvMessage(socket: net.Socket): Promise<TradeMessage
             const bodySize = header.count * 32;
             const bodyBuffer = await mitchRecvTCP(socket, bodySize);
             
-            const trades: TradeBody[] = [];
+            const trades: Trade[] = [];
             for (let i = 0; i < header.count; i++) {
                 const tradeBuffer = bodyBuffer.subarray(i * 32, (i + 1) * 32);
-                trades.push(unpackTradeBody(tradeBuffer));
+                trades.push(unpackTrade(tradeBuffer));
             }
             
             return { header, trades };
@@ -556,10 +556,10 @@ export async function mitchRecvMessage(socket: net.Socket): Promise<TradeMessage
             const bodySize = header.count * 32;
             const bodyBuffer = await mitchRecvTCP(socket, bodySize);
             
-            const orders: OrderBody[] = [];
+            const orders: Order[] = [];
             for (let i = 0; i < header.count; i++) {
                 const orderBuffer = bodyBuffer.subarray(i * 32, (i + 1) * 32);
-                orders.push(unpackOrderBody(orderBuffer));
+                orders.push(unpackOrder(orderBuffer));
             }
             
             return { header, orders };
@@ -569,24 +569,24 @@ export async function mitchRecvMessage(socket: net.Socket): Promise<TradeMessage
             const bodySize = header.count * 32;
             const bodyBuffer = await mitchRecvTCP(socket, bodySize);
             
-            const tickers: TickerBody[] = [];
+            const tickers: Tick[] = [];
             for (let i = 0; i < header.count; i++) {
                 const tickerBuffer = bodyBuffer.subarray(i * 32, (i + 1) * 32);
-                tickers.push(unpackTickerBody(tickerBuffer));
+                tickers.push(unpackTick(tickerBuffer));
             }
             
             return { header, tickers };
         }
         
         case MSG_TYPE_ORDER_BOOK: {
-            const orderBooks: OrderBookBody[] = [];
+            const orderBooks: OrderBook[] = [];
             const volumes: number[][] = [];
             
             let offset = 0;
             for (let i = 0; i < header.count; i++) {
                 // Read order book header (32 bytes)
                 const headerBuffer = await mitchRecvTCP(socket, 32);
-                const orderBook = unpackOrderBookBody(headerBuffer);
+                const orderBook = unpackOrderBook(headerBuffer);
                 orderBooks.push(orderBook);
                 
                 // Read volumes (numTicks * 4 bytes)

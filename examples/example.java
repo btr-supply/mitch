@@ -69,8 +69,8 @@ public class Example {
         // Calculate total message size
         int totalSize = 8; // Header size
         for (Object body : bodies) {
-            if (body instanceof OrderBookBody) {
-                OrderBookBody ob = (OrderBookBody) body;
+            if (body instanceof OrderBook) {
+                OrderBook ob = (OrderBook) body;
                 totalSize += 32 + (ob.numTicks * 4); // Header + volumes
             } else {
                 totalSize += 32; // Fixed-size bodies
@@ -84,20 +84,20 @@ public class Example {
 
         // Pack bodies based on type
         for (Object body : bodies) {
-            if (body instanceof TradeBody) {
-                TradeBody t = (TradeBody) body;
+            if (body instanceof Trade) {
+                Trade t = (Trade) body;
                 buffer.putLong(t.tickerId).putDouble(t.price).putInt((int) t.quantity)
                       .putInt((int) t.tradeId).put(t.side).put(t.padding);
-            } else if (body instanceof OrderBody) {
-                OrderBody o = (OrderBody) body;
+            } else if (body instanceof Order) {
+                Order o = (Order) body;
                 buffer.putLong(o.tickerId).putInt((int) o.orderId).putDouble(o.price)
                       .putInt((int) o.quantity).put(o.typeAndSide).put(o.expiry).put(o.padding);
-            } else if (body instanceof TickerBody) {
-                TickerBody s = (TickerBody) body;
+            } else if (body instanceof Tick) {
+                Tick s = (Tick) body;
                 buffer.putLong(s.tickerId).putDouble(s.bidPrice).putDouble(s.askPrice)
                       .putInt((int) s.bidVolume).putInt((int) s.askVolume);
-            } else if (body instanceof OrderBookBody) {
-                OrderBookBody ob = (OrderBookBody) body;
+            } else if (body instanceof OrderBook) {
+                OrderBook ob = (OrderBook) body;
                 buffer.putLong(ob.tickerId).putDouble(ob.firstTick).putDouble(ob.tickSize)
                       .putShort((short) ob.numTicks).put(ob.side).put(ob.padding);
                 // Pack volume array
@@ -126,7 +126,7 @@ public class Example {
         for (int i = 0; i < header.count; i++) {
             switch (header.messageType) {
                 case MSG_TYPE_TRADE:
-                    TradeBody trade = new TradeBody();
+                    Trade trade = new Trade();
                     trade.tickerId = buffer.getLong();
                     trade.price = buffer.getDouble();
                     trade.quantity = Integer.toUnsignedLong(buffer.getInt());
@@ -136,7 +136,7 @@ public class Example {
                     bodies.add(trade);
                     break;
                 case MSG_TYPE_ORDER:
-                    OrderBody order = new OrderBody();
+                    Order order = new Order();
                     order.tickerId = buffer.getLong();
                     order.orderId = Integer.toUnsignedLong(buffer.getInt());
                     order.price = buffer.getDouble();
@@ -147,7 +147,7 @@ public class Example {
                     bodies.add(order);
                     break;
                 case MSG_TYPE_TICKER:
-                    TickerBody ticker = new TickerBody();
+                    Tick ticker = new Tick();
                     ticker.tickerId = buffer.getLong();
                     ticker.bidPrice = buffer.getDouble();
                     ticker.askPrice = buffer.getDouble();
@@ -156,7 +156,7 @@ public class Example {
                     bodies.add(ticker);
                     break;
                 case MSG_TYPE_ORDER_BOOK:
-                    OrderBookBody orderBook = new OrderBookBody();
+                    OrderBook orderBook = new OrderBook();
                     orderBook.tickerId = buffer.getLong();
                     orderBook.firstTick = buffer.getDouble();
                     orderBook.tickSize = buffer.getDouble();
@@ -233,8 +233,8 @@ public class Example {
         System.out.println("--- MITCH Java Example ---");
 
         // Create batch trade message
-        TradeBody trade1 = new TradeBody(1L, 1.2345, 100L, 1001L, SIDE_BUY);
-        TradeBody trade2 = new TradeBody(1L, 1.2346, 50L, 1002L, SIDE_SELL);
+        Trade trade1 = new Trade(1L, 1.2345, 100L, 1001L, SIDE_BUY);
+        Trade trade2 = new Trade(1L, 1.2346, 50L, 1002L, SIDE_SELL);
         
         byte[] tradeMsg = pack(MSG_TYPE_TRADE, trade1, trade2);
         System.out.printf("Packed batch trades (%d bytes): %s\n", 
@@ -246,13 +246,13 @@ public class Example {
                          (char) unpacked.header.messageType, unpacked.header.count);
         
         for (int i = 0; i < unpacked.bodies.size(); i++) {
-            TradeBody t = (TradeBody) unpacked.bodies.get(i);
+            Trade t = (Trade) unpacked.bodies.get(i);
             System.out.printf("  Trade %d: ticker=%d, price=%.4f, qty=%d, side=%d\n", 
                              i + 1, t.tickerId, t.price, t.quantity, t.side);
         }
 
         // Create single order message
-        OrderBody order = new OrderBody(2L, 2001L, 98.5, 25L, 
+        Order order = new Order(2L, 2001L, 98.5, 25L, 
                                        combineTypeAndSide(ORDER_TYPE_LIMIT, SIDE_BUY), 
                                        new byte[6]);
         
@@ -262,14 +262,14 @@ public class Example {
 
         // Unpack and display order
         UnpackedMessage unpackedOrder = unpack(orderMsg);
-        OrderBody o = (OrderBody) unpackedOrder.bodies.get(0);
+        Order o = (Order) unpackedOrder.bodies.get(0);
         System.out.printf("Unpacked Order: id=%d, type=%d, side=%d, price=%.1f\n",
                          o.orderId, extractOrderType(o.typeAndSide), 
                          extractSide(o.typeAndSide), o.price);
 
         // Create order book message
         long[] volumes = {1000L, 500L, 250L};
-        OrderBookBody orderBook = new OrderBookBody(3L, 100.0, 0.01, 3, SIDE_BUY, volumes);
+        OrderBook orderBook = new OrderBook(3L, 100.0, 0.01, 3, SIDE_BUY, volumes);
         
         byte[] orderBookMsg = pack(MSG_TYPE_ORDER_BOOK, orderBook);
         System.out.printf("\nPacked order book (%d bytes): %s\n", 
@@ -277,7 +277,7 @@ public class Example {
 
         // Unpack and display order book
         UnpackedMessage unpackedOrderBook = unpack(orderBookMsg);
-        OrderBookBody ob = (OrderBookBody) unpackedOrderBook.bodies.get(0);
+        OrderBook ob = (OrderBook) unpackedOrderBook.bodies.get(0);
         System.out.printf("Unpacked Order Book: ticker=%d, firstTick=%.2f, numTicks=%d, side=%d\n",
                          ob.tickerId, ob.firstTick, ob.numTicks, ob.side);
         System.out.print("  Volumes: ");

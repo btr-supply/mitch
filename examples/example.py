@@ -9,7 +9,7 @@ import time
 from typing import List, Tuple, Optional, Union
 
 from ..model.model import (
-    MitchHeader, TradeBody, OrderBody, TickerBody, OrderBookBody,
+    MitchHeader, Trade, Order, Tick, OrderBook,
     MSG_TYPE_TRADE, MSG_TYPE_ORDER, MSG_TYPE_TICKER, MSG_TYPE_ORDER_BOOK, BYTE_ORDER,
     SIDE_BUY, SIDE_SELL, ORDER_TYPE_MARKET, ORDER_TYPE_LIMIT, ORDER_TYPE_STOP, ORDER_TYPE_CANCEL,
     extract_side, extract_order_type, combine_type_and_side
@@ -37,7 +37,7 @@ def pack_header(header: MitchHeader) -> bytes:
                       header.timestamp, 
                       header.count)
 
-def pack_trade_body(trade: TradeBody) -> bytes:
+def pack_trade_body(trade: Trade) -> bytes:
     """Pack trade body into 32 bytes using big-endian format"""
     return struct.pack(f'{BYTE_ORDER}QdIIB7s',
                       trade.ticker_id,
@@ -47,7 +47,7 @@ def pack_trade_body(trade: TradeBody) -> bytes:
                       trade.side,
                       trade.padding)
 
-def pack_order_body(order: OrderBody) -> bytes:
+def pack_order_body(order: Order) -> bytes:
     """Pack order body into 32 bytes using big-endian format"""
     return struct.pack(f'{BYTE_ORDER}QIdIB6ss',
                       order.ticker_id,
@@ -58,7 +58,7 @@ def pack_order_body(order: OrderBody) -> bytes:
                       order.expiry,
                       order.padding)
 
-def pack_ticker_body(ticker: TickerBody) -> bytes:
+def pack_ticker_body(ticker: Tick) -> bytes:
     """Pack ticker body into 32 bytes using big-endian format"""
     return struct.pack(f'{BYTE_ORDER}QddII',
                       ticker.ticker_id,
@@ -67,7 +67,7 @@ def pack_ticker_body(ticker: TickerBody) -> bytes:
                       ticker.bid_volume,
                       ticker.ask_volume)
 
-def pack_order_book_body(order_book: OrderBookBody) -> bytes:
+def pack_order_book_body(order_book: OrderBook) -> bytes:
     """Pack order book body into variable-sized bytes using big-endian format"""
     header = struct.pack(f'{BYTE_ORDER}QddHB5s',
                         order_book.ticker_id,
@@ -87,30 +87,30 @@ def unpack_header(data: bytes) -> MitchHeader:
     message_type_bytes, timestamp, count = struct.unpack(f'{BYTE_ORDER}c6sB', data[:8])
     return MitchHeader(ord(message_type_bytes), timestamp, count)
 
-def unpack_trade_body(data: bytes) -> TradeBody:
+def unpack_trade_body(data: bytes) -> Trade:
     """Unpack 32 bytes into trade body using big-endian format"""
     ticker_id, price, quantity, trade_id, side, padding = struct.unpack(f'{BYTE_ORDER}QdIIB7s', data[:32])
-    return TradeBody(ticker_id, price, quantity, trade_id, side, padding)
+    return Trade(ticker_id, price, quantity, trade_id, side, padding)
 
-def unpack_order_body(data: bytes) -> OrderBody:
+def unpack_order_body(data: bytes) -> Order:
     """Unpack 32 bytes into order body using big-endian format"""
     ticker_id, order_id, price, quantity, type_and_side, expiry, padding = \
         struct.unpack(f'{BYTE_ORDER}QIdIB6ss', data[:32])
-    return OrderBody(ticker_id, order_id, price, quantity, type_and_side, expiry, padding)
+    return Order(ticker_id, order_id, price, quantity, type_and_side, expiry, padding)
 
-def unpack_ticker_body(data: bytes) -> TickerBody:
+def unpack_ticker_body(data: bytes) -> Tick:
     """Unpack 32 bytes into ticker body using big-endian format"""
     ticker_id, bid_price, ask_price, bid_volume, ask_volume = \
         struct.unpack(f'{BYTE_ORDER}QddII', data[:32])
-    return TickerBody(ticker_id, bid_price, ask_price, bid_volume, ask_volume)
+    return Tick(ticker_id, bid_price, ask_price, bid_volume, ask_volume)
 
-def unpack_order_book_body(data: bytes) -> OrderBookBody:
+def unpack_order_book_body(data: bytes) -> OrderBook:
     """Unpack variable-sized bytes into order book body using big-endian format"""
     ticker_id, first_tick, tick_size, num_ticks, side, padding = \
         struct.unpack(f'{BYTE_ORDER}QddHB5s', data[:32])
     
     volumes = list(struct.unpack(f'{BYTE_ORDER}{num_ticks}I', data[32:32 + num_ticks * 4]))
-    return OrderBookBody(ticker_id, first_tick, tick_size, num_ticks, side, padding, volumes)
+    return OrderBook(ticker_id, first_tick, tick_size, num_ticks, side, padding, volumes)
 
 # === TCP SEND/RECV FUNCTIONS ===
 
@@ -167,7 +167,7 @@ def mitch_recv_message(sock: socket.socket) -> bytes:
     else:
         raise ValueError(f"Unknown message type: {header.message_type}")
 
-def parse_message(data: bytes) -> Tuple[MitchHeader, Union[List[TradeBody], List[OrderBody], List[TickerBody], OrderBookBody]]:
+def parse_message(data: bytes) -> Tuple[MitchHeader, Union[List[Trade], List[Order], List[Tick], OrderBook]]:
     """Parse a complete MITCH message"""
     header = unpack_header(data[:8])
     bodies = []
@@ -202,7 +202,7 @@ def example_usage():
         count=1
     )
     
-    trade = TradeBody(
+    trade = Trade(
         ticker_id=0x00006F001CD00000,  # EUR/USD
         price=1.0850,
         quantity=1000000,  # 1.0 lot scaled by 1000000

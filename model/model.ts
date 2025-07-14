@@ -33,9 +33,9 @@ export interface MitchHeader {
  */
 
 /**
- * TradeBody (32 bytes)
+ * Trade (32 bytes)
  */
-export interface TradeBody {
+export interface Trade {
     tickerId: bigint;        // 8-byte ticker identifier
     price: number;           // Execution price (8 bytes)
     quantity: number;        // Executed volume/quantity (4 bytes)
@@ -45,9 +45,9 @@ export interface TradeBody {
 }
 
 /**
- * OrderBody (32 bytes)
+ * Order (32 bytes)
  */
-export interface OrderBody {
+export interface Order {
     tickerId: bigint;        // 8-byte ticker identifier
     orderId: number;         // Unique order identifier (4 bytes)
     price: number;           // Limit/stop price (8 bytes)
@@ -58,9 +58,9 @@ export interface OrderBody {
 }
 
 /**
- * TickerBody (32 bytes)
+ * Tick (32 bytes)
  */
-export interface TickerBody {
+export interface Tick {
     tickerId: bigint;        // 8-byte ticker identifier
     bidPrice: number;        // Best bid price (8 bytes)
     askPrice: number;        // Best ask price (8 bytes)
@@ -69,10 +69,10 @@ export interface TickerBody {
 }
 
 /**
- * OrderBookBody (32 bytes header only)
+ * OrderBook (32 bytes header only)
  * Note: Volumes are handled separately as per specification
  */
-export interface OrderBookBody {
+export interface OrderBook {
     tickerId: bigint;        // 8-byte ticker identifier
     firstTick: number;       // Starting price level (8 bytes)
     tickSize: number;        // Price increment per tick (8 bytes)
@@ -86,35 +86,35 @@ export interface OrderBookBody {
  */
 
 /**
- * Trade Message: Header + TradeBody[]
+ * Trade Message: Header + Trade[]
  */
 export interface TradeMessage {
     header: MitchHeader;
-    trades: TradeBody[];
+    trades: Trade[];
 }
 
 /**
- * Order Message: Header + OrderBody[]
+ * Order Message: Header + Order[]
  */
 export interface OrderMessage {
     header: MitchHeader;
-    orders: OrderBody[];
+    orders: Order[];
 }
 
 /**
- * Ticker Message: Header + TickerBody[]
+ * Ticker Message: Header + Tick[]
  */
 export interface TickerMessage {
     header: MitchHeader;
-    tickers: TickerBody[];
+    tickers: Tick[];
 }
 
 /**
- * Order Book Message: Header + OrderBookBody[] + volumes for each
+ * Order Book Message: Header + OrderBook[] + volumes for each
  */
 export interface OrderBookMessage {
     header: MitchHeader;
-    orderBooks: OrderBookBody[];
+    orderBooks: OrderBook[];
     volumes: number[][]; // Array of volume arrays, one per order book
 }
 

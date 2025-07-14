@@ -28,10 +28,10 @@ pub struct MitchHeader {
 
 /// Body Structures (32 bytes each)
 
-/// TradeBody (32 bytes)
+/// Trade (32 bytes)
 #[repr(C, packed)]
 #[derive(Debug, Clone, Copy, Default)]
-pub struct TradeBody {
+pub struct Trade {
     pub ticker_id: u64,
     pub price: f64,
     pub quantity: u32,
@@ -40,10 +40,10 @@ pub struct TradeBody {
     pub padding: [u8; 7],
 }
 
-/// OrderBody (32 bytes)
+/// Order (32 bytes)
 #[repr(C, packed)]
 #[derive(Debug, Clone, Copy, Default)]
-pub struct OrderBody {
+pub struct Order {
     pub ticker_id: u64,
     pub order_id: u32,
     pub price: f64,
@@ -53,10 +53,10 @@ pub struct OrderBody {
     pub padding: u8,
 }
 
-/// TickerBody (32 bytes)
+/// Tick (32 bytes)
 #[repr(C, packed)]
 #[derive(Debug, Clone, Copy, Default)]
-pub struct TickerBody {
+pub struct Tick {
     pub ticker_id: u64,
     pub bid_price: f64,
     pub ask_price: f64,
@@ -64,11 +64,11 @@ pub struct TickerBody {
     pub ask_volume: u32,
 }
 
-/// OrderBookBody (Header: 32 bytes)
+/// OrderBook (Header: 32 bytes)
 /// Variable size: 32 bytes header + num_ticks * 4 bytes
 #[repr(C, packed)]
 #[derive(Debug, Clone, Copy, Default)]
-pub struct OrderBookBody {
+pub struct OrderBook {
     pub ticker_id: u64,
     pub first_tick: f64,
     pub tick_size: f64,

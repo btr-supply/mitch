@@ -36,8 +36,8 @@ type MitchHeader struct {
 
 // --- Body Structures (32 bytes each) ---
 
-// TradeBody defines a trade body (32 bytes)
-type TradeBody struct {
+// Trade defines a trade body (32 bytes)
+type Trade struct {
 	TickerID uint64
 	Price    float64
 	Quantity uint32
@@ -46,8 +46,8 @@ type TradeBody struct {
 	Padding  [7]byte
 }
 
-// OrderBody defines an order body (32 bytes)
-type OrderBody struct {
+// Order defines an order body (32 bytes)
+type Order struct {
 	TickerID    uint64
 	OrderID     uint32
 	Price       float64
@@ -57,8 +57,8 @@ type OrderBody struct {
 	Padding     byte
 }
 
-// TickerBody defines a ticker body (32 bytes)
-type TickerBody struct {
+// Tick defines a ticker body (32 bytes)
+type Tick struct {
 	TickerID  uint64
 	BidPrice  float64
 	AskPrice  float64
@@ -66,9 +66,9 @@ type TickerBody struct {
 	AskVolume uint32
 }
 
-// OrderBookBody defines an order book body (variable size)
+// OrderBook defines an order book body (variable size)
 // Size: 32 bytes header + NumTicks * 4 bytes
-type OrderBookBody struct {
+type OrderBook struct {
 	TickerID  uint64
 	FirstTick float64
 	TickSize  float64

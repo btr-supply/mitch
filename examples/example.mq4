@@ -123,7 +123,7 @@ int PackHeader(const MitchHeader &header, uchar &buffer[])
 }
 
 // Pack ticker body with proper MITCH ticker ID
-int PackTickerBody(const TickerBody &ticker, uchar &buffer[])
+int PackTick(const Tick &ticker, uchar &buffer[])
 {
    ArrayResize(buffer, 32);
    
@@ -153,7 +153,7 @@ int PackTickerBody(const TickerBody &ticker, uchar &buffer[])
 }
 
 // Pack complete ticker message
-int PackTickerMessageFast(const TickerBody &ticker, uchar &buffer[])
+int PackTickerMessageFast(const Tick &ticker, uchar &buffer[])
 {
    // Create header
    MitchHeader header;
@@ -164,7 +164,7 @@ int PackTickerMessageFast(const TickerBody &ticker, uchar &buffer[])
    // Pack header and body
    uchar headerBuffer[], bodyBuffer[];
    int headerSize = PackHeader(header, headerBuffer);
-   int bodySize = PackTickerBody(ticker, bodyBuffer);
+   int bodySize = PackTick(ticker, bodyBuffer);
    
    // Combine into single message
    ArrayResize(buffer, headerSize + bodySize);
@@ -175,9 +175,9 @@ int PackTickerMessageFast(const TickerBody &ticker, uchar &buffer[])
 }
 
 // Create ticker from MT4 symbol
-TickerBody CreateTickerFromSymbol(string symbol)
+Tick CreateTickerFromSymbol(string symbol)
 {
-   TickerBody ticker;
+   Tick ticker;
    
    // Generate ticker ID using basic implementation
    ticker.tickerId = GenerateForexTickerID(symbol);
@@ -208,7 +208,7 @@ bool UnpackHeader(uchar &buffer[], MitchHeader &header)
 }
 
 // Unpack ticker body
-bool UnpackTickerBody(uchar &buffer[], TickerBody &ticker)
+bool UnpackTick(uchar &buffer[], Tick &ticker)
 {
    if(ArraySize(buffer) < 32) return false;
    
@@ -243,7 +243,7 @@ bool UnpackTickerBody(uchar &buffer[], TickerBody &ticker)
 }
 
 // Unpack complete ticker message
-bool UnpackTickerMessageFast(uchar &buffer[], MitchHeader &header, TickerBody &ticker)
+bool UnpackTickerMessageFast(uchar &buffer[], MitchHeader &header, Tick &ticker)
 {
    if(ArraySize(buffer) < 40) return false; // 8 header + 32 body
    
@@ -259,7 +259,7 @@ bool UnpackTickerMessageFast(uchar &buffer[], MitchHeader &header, TickerBody &t
    ArrayResize(bodyBuffer, 32);
    ArrayCopy(bodyBuffer, buffer, 0, 8, 32);
    
-   return UnpackTickerBody(bodyBuffer, ticker);
+   return UnpackTick(bodyBuffer, ticker);
 }
 
 //+------------------------------------------------------------------+
@@ -347,7 +347,7 @@ bool TestSerializationRoundTrip()
    Print("--- Testing Serialization Round-Trip ---");
    
    // Create test ticker
-   TickerBody originalTicker = CreateTickerFromSymbol("EURUSD");
+   Tick originalTicker = CreateTickerFromSymbol("EURUSD");
    originalTicker.bidPrice = 1.0950;
    originalTicker.askPrice = 1.0952;
    originalTicker.bidVolume = 1000000;
@@ -365,7 +365,7 @@ bool TestSerializationRoundTrip()
       
       // Deserialize
       MitchHeader header;
-      TickerBody deserializedTicker;
+      Tick deserializedTicker;
       
       if(UnpackTickerMessageFast(buffer, header, deserializedTicker))
       {
@@ -426,7 +426,7 @@ bool TestPerformanceBenchmarks()
    Print("  Ticker creation rate: " + DoubleToString(creationRate, 0) + " ops/sec");
    
    // Test serialization performance
-   TickerBody ticker = CreateTickerFromSymbol("EURUSD");
+   Tick ticker = CreateTickerFromSymbol("EURUSD");
    uchar buffer[];
    
    startTime = GetTickCount();

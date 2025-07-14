@@ -47,8 +47,8 @@ public class MitchModel {
 
     // --- Body Structures (32 bytes each) ---
 
-    // TradeBody (32 bytes)
-    public static class TradeBody {
+    // Trade (32 bytes)
+    public static class Trade {
         public long tickerId;      // u64
         public double price;       // f64
         public long quantity;      // u32 - using long to handle unsigned int
@@ -56,9 +56,9 @@ public class MitchModel {
         public byte side;          // u8: 0: Buy, 1: Sell
         public byte[] padding = new byte[7]; // Padding to 32 bytes
 
-        public TradeBody() {}
+        public Trade() {}
 
-        public TradeBody(long tickerId, double price, long quantity, long tradeId, byte side) {
+        public Trade(long tickerId, double price, long quantity, long tradeId, byte side) {
             this.tickerId = tickerId;
             this.price = price;
             this.quantity = quantity;
@@ -67,8 +67,8 @@ public class MitchModel {
         }
     }
 
-    // OrderBody (32 bytes)
-    public static class OrderBody {
+    // Order (32 bytes)
+    public static class Order {
         public long tickerId;      // u64
         public long orderId;       // u32 - using long to handle unsigned int
         public double price;       // f64
@@ -77,11 +77,11 @@ public class MitchModel {
         public byte[] expiry;      // 6-byte expiry timestamp (u48)
         public byte padding;       // Padding to 32 bytes
 
-        public OrderBody() {
+        public Order() {
             this.expiry = new byte[6];
         }
 
-        public OrderBody(long tickerId, long orderId, double price, long quantity, 
+        public Order(long tickerId, long orderId, double price, long quantity, 
                         byte typeAndSide, byte[] expiry) {
             this.tickerId = tickerId;
             this.orderId = orderId;
@@ -92,17 +92,17 @@ public class MitchModel {
         }
     }
 
-    // TickerBody (32 bytes)
-    public static class TickerBody {
+    // Tick (32 bytes)
+    public static class Tick {
         public long tickerId;      // u64
         public double bidPrice;    // f64
         public double askPrice;    // f64
         public long bidVolume;     // u32 - using long to handle unsigned int
         public long askVolume;     // u32 - using long to handle unsigned int
 
-        public TickerBody() {}
+        public Tick() {}
 
-        public TickerBody(long tickerId, double bidPrice, double askPrice, 
+        public Tick(long tickerId, double bidPrice, double askPrice, 
                          long bidVolume, long askVolume) {
             this.tickerId = tickerId;
             this.bidPrice = bidPrice;
@@ -112,9 +112,9 @@ public class MitchModel {
         }
     }
 
-    // OrderBookBody (Header: 32 bytes)
+    // OrderBook (Header: 32 bytes)
     // Variable size: 32 bytes header + numTicks * 4 bytes
-    public static class OrderBookBody {
+    public static class OrderBook {
         public long tickerId;      // u64
         public double firstTick;   // f64
         public double tickSize;    // f64
@@ -123,11 +123,11 @@ public class MitchModel {
         public byte[] padding = new byte[5]; // Padding to 32 bytes
         public long[] volumes;     // u32[] - volume array, using long[] to handle unsigned ints
 
-        public OrderBookBody() {
+        public OrderBook() {
             this.volumes = new long[0];
         }
 
-        public OrderBookBody(long tickerId, double firstTick, double tickSize, 
+        public OrderBook(long tickerId, double firstTick, double tickSize, 
                            int numTicks, byte side, long[] volumes) {
             this.tickerId = tickerId;
             this.firstTick = firstTick;

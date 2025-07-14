@@ -35,9 +35,9 @@ class MitchHeader:
 
 # --- Body Structures (32 bytes each) ---
 
-# TradeBody (32 bytes)
+# Trade (32 bytes)
 @dataclass
-class TradeBody:
+class Trade:
     ticker_id: int
     price: float
     quantity: int
@@ -45,9 +45,9 @@ class TradeBody:
     side: int               # 0: Buy, 1: Sell
     padding: bytes = b'\x00' * 7
 
-# OrderBody (32 bytes)
+# Order (32 bytes)
 @dataclass
-class OrderBody:
+class Order:
     ticker_id: int
     order_id: int
     price: float
@@ -56,19 +56,19 @@ class OrderBody:
     expiry: bytes           # 6-byte expiry timestamp
     padding: bytes = b'\x00'
 
-# TickerBody (32 bytes)
+# Tick (32 bytes)
 @dataclass
-class TickerBody:
+class Tick:
     ticker_id: int
     bid_price: float
     ask_price: float
     bid_volume: int
     ask_volume: int
 
-# OrderBookBody (Header: 32 bytes)
+# OrderBook (Header: 32 bytes)
 # Variable size: 32 bytes header + num_ticks * 4 bytes
 @dataclass
-class OrderBookBody:
+class OrderBook:
     ticker_id: int
     first_tick: float
     tick_size: float

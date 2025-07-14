@@ -82,8 +82,8 @@ struct MitchHeader
    uchar   count;            // Number of body entries (1-255)
 };
 
-// --- Extended TickerBody for MT4 with volume tracking (32 bytes) ---
-struct TickerBody
+// --- Extended Tick for MT4 with volume tracking (32 bytes) ---
+struct Tick
 {
    ulong   tickerId;         // 8-byte unique ticker identifier
    double  bidPrice;         // Best bid price
@@ -93,7 +93,7 @@ struct TickerBody
 };
 
 // --- Trade Body (32 bytes) ---
-struct TradeBody
+struct Trade
 {
    ulong   tickerId;         // 8-byte unique ticker identifier
    double  price;            // Execution price
@@ -104,7 +104,7 @@ struct TradeBody
 };
 
 // --- Order Body (32 bytes) ---
-struct OrderBody
+struct Order
 {
    ulong   tickerId;         // 8-byte unique ticker identifier
    uint    orderId;          // Required unique order identifier
@@ -116,7 +116,7 @@ struct OrderBody
 };
 
 // --- Order Book Body Header (32 bytes) ---
-struct OrderBookBody
+struct OrderBook
 {
    ulong   tickerId;         // 8-byte unique ticker identifier
    double  firstTick;        // Starting price level

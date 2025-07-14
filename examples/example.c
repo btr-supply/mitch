@@ -45,7 +45,7 @@ int pack_header(const MitchHeader *header, uint8_t *buffer) {
     return 8;
 }
 
-int pack_trade_body(const TradeBody *trade, uint8_t *buffer) {
+int pack_trade_body(const Trade *trade, uint8_t *buffer) {
     uint8_t *ptr = buffer;
     
     uint64_t ticker_id = htobe64(trade->ticker_id);
@@ -65,7 +65,7 @@ int pack_trade_body(const TradeBody *trade, uint8_t *buffer) {
     return 32;
 }
 
-int pack_order_body(const OrderBody *order, uint8_t *buffer) {
+int pack_order_body(const Order *order, uint8_t *buffer) {
     uint8_t *ptr = buffer;
     
     uint64_t ticker_id = htobe64(order->ticker_id);
@@ -86,7 +86,7 @@ int pack_order_body(const OrderBody *order, uint8_t *buffer) {
     return 32;
 }
 
-int pack_ticker_body(const TickerBody *ticker, uint8_t *buffer) {
+int pack_ticker_body(const Tick *ticker, uint8_t *buffer) {
     uint8_t *ptr = buffer;
     
     uint64_t ticker_id = htobe64(ticker->ticker_id);
@@ -104,7 +104,7 @@ int pack_ticker_body(const TickerBody *ticker, uint8_t *buffer) {
     return 32;
 }
 
-int pack_order_book_body(const OrderBookBody *order_book, const uint32_t *volumes, uint8_t *buffer) {
+int pack_order_book_body(const OrderBook *order_book, const uint32_t *volumes, uint8_t *buffer) {
     uint8_t *ptr = buffer;
     
     uint64_t ticker_id = htobe64(order_book->ticker_id);
@@ -138,7 +138,7 @@ int unpack_header(const uint8_t *buffer, MitchHeader *header) {
     return 8;
 }
 
-int unpack_trade_body(const uint8_t *buffer, TradeBody *trade) {
+int unpack_trade_body(const uint8_t *buffer, Trade *trade) {
     const uint8_t *ptr = buffer;
     
     memcpy(&trade->ticker_id, ptr, 8);
@@ -158,7 +158,7 @@ int unpack_trade_body(const uint8_t *buffer, TradeBody *trade) {
     return 32;
 }
 
-int unpack_order_body(const uint8_t *buffer, OrderBody *order) {
+int unpack_order_body(const uint8_t *buffer, Order *order) {
     const uint8_t *ptr = buffer;
     
     memcpy(&order->ticker_id, ptr, 8);
@@ -179,7 +179,7 @@ int unpack_order_body(const uint8_t *buffer, OrderBody *order) {
     return 32;
 }
 
-int unpack_ticker_body(const uint8_t *buffer, TickerBody *ticker) {
+int unpack_ticker_body(const uint8_t *buffer, Tick *ticker) {
     const uint8_t *ptr = buffer;
     
     memcpy(&ticker->ticker_id, ptr, 8);
@@ -197,7 +197,7 @@ int unpack_ticker_body(const uint8_t *buffer, TickerBody *ticker) {
     return 32;
 }
 
-int unpack_order_book_body(const uint8_t *buffer, OrderBookBody *order_book, uint32_t *volumes) {
+int unpack_order_book_body(const uint8_t *buffer, OrderBook *order_book, uint32_t *volumes) {
     const uint8_t *ptr = buffer;
     
     memcpy(&order_book->ticker_id, ptr, 8);
@@ -352,7 +352,7 @@ void example_usage() {
     uint64_t timestamp = get_timestamp_ns();
     write_timestamp_48(header.timestamp, timestamp);
     
-    TradeBody trade = {
+    Trade trade = {
         .ticker_id = 0x00006F001CD00000ULL, // EUR/USD
         .price = 1.0850,
         .quantity = 1000000, // 1.0 lot scaled by 1000000
