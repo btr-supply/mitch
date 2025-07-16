@@ -1,4 +1,16 @@
-# MITCH: Ultra-light Market-Data Protocol
+<div align="center">
+  <img border-radius="25px" max-height="250px" src="./banner.png" />
+  <h1>MITCH</h1>
+  <p>
+    <strong>Market data, faster than light</strong>
+  </p>
+  <p>
+    <a href="./model/overview.md"><img alt="Docs" src="https://img.shields.io/badge/Docs-212121?style=flat-square&logo=readthedocs&logoColor=white" width="auto"/></a>
+    <a href="https://opensource.org/licenses/MIT"><img alt="License" src="https://img.shields.io/badge/license-MIT-000000?style=flat-square&logo=open-source-initiative&logoColor=white&labelColor=4c9c3d" width="auto"/></a>
+    <a href="https://t.me/BTRSupply"><img alt="Telegram" src="https://img.shields.io/badge/Telegram-24b3e3?style=flat-square&logo=telegram&logoColor=white" width="auto"/></a>
+    <a href="https://twitter.com/BTRSupply"><img alt="X (Twitter)" src="https://img.shields.io/badge/@BTRSupply-000000?style=flat-square&logo=x&logoColor=white" width="auto"/></a>
+    </p>
+</div>
 
 ## Overview
 
