@@ -46,11 +46,12 @@ The Ticker ID uses a carefully designed bit allocation to maximize addressable s
 ## Asset Components (20 bits each)
 
 Each asset (base and quote) combines a 4-bit class identifier with a 16-bit unique ID within that class:
+```
 ┌─────────────┬─────────────────────┐
 │ Asset Class │ Asset ID            │
 │ (4 bits)    │ (16 bits)           │
 └─────────────┴─────────────────────┘
-
+```
 cf. [../asset.md]
 
 ## Memory Layout
