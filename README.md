@@ -47,14 +47,10 @@
 Complete reference implementations in `./impl/`:
 
 | Language | File | Target Environment |
-|----------|------|-------------------|
-| **Rust** | `mitch.rs` | High-performance systems, core libraries |
-| **TypeScript** | `mitch.ts` | Web browsers, Node.js applications |
-| **Python** | `mitch.py` | Data science, backend services, research |
-| **Go** | `mitch.go` | Microservices, cloud-native applications |
-| **Java** | `mitch.java` | Enterprise applications, Android |
-| **C** | `mitch.h` | Embedded systems, high-frequency trading |
-| **MQL4** | `mitch.mq4` | MetaTrader 4 trading platforms |
+|----------|------|--------------------|
+| **Rust** | `mitch.rs` | Reference implementation |
+| **TypeScript** | `mitch.ts` | Bun, Node, Deno targets |
+| **MQL4** | `mitch.mq4` | MetaTrader 4 port |
 
 ## Performance Characteristics
 
