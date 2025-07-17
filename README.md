@@ -14,7 +14,7 @@
 
 ## Overview
 
-**MITCH (Moded Individual Trade Clearing and Handling)** is a transport-agnostic binary protocol designed for ultra-low latency market data packing and transmission. See [model/overview.md](./model/overview.md) for detailed protocol overview. Inspired by [NASDAQ's ITCH](https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf), with extended types, no bloat, performant.
+**MITCH (Moded Individual Trade Clearing and Handling)** is a transport-agnostic binary protocol designed for ultra-low latency market data packing and transmission. See [model/overview.md](./model/overview.md) for detailed protocol overview. Inspired by [NASDAQ's ITCH](https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf), with altered types and batch packing.
 
 ## Key Features
 
@@ -25,7 +25,6 @@
 - **🛡️ Production Ready**: Comprehensive reference implementations and examples
 - **📊 Order Book Snapshots**: 2KB fixed-size full order books l2 depth aggregated by adaptive bins
 - **🎯 Universal IDs**: Low-footprint, 64-bit ticker identifiers and 32-bit exchange+message type channel identifiers for efficient pub/sub routing
-- **🚀 Ultra-Light**: 10-40% lighter messages than NASDAQ ITCH
 
 ## Protocol Specifications
 
