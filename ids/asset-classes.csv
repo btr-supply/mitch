@@ -1,16 +1,16 @@
-mitch_id,name
-0,Equities
-1,Corporate Bonds
-2,Sovereign Debt
-3,Forex
-4,Commodities
-5,Real Estate
-6,Crypto Assets
-7,Private Markets
-8,Collectibles
-9,Infrastructure
-10,Indices & Index Products
-11,Structured Products
-12,Cash & Equivalents
-13,Loans & Receivables
-14,*Reserved*
+id,name,aliases
+0,Equities,EQ
+1,Corporate Bonds,CB
+2,Sovereign Debt,SD
+3,Forex,FX
+4,Commodities,CM
+5,Real Estate,RE
+6,Crypto Assets,CR
+7,Private Markets,PM
+8,Collectibles,CL
+9,Infrastructure,IN
+10,Indices & Index Products,IP
+11,Structured Products,SP
+12,Cash & Equivalents,CE
+13,Loans & Receivables,LR
+14,*Reserved*,

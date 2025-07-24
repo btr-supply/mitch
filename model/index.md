@@ -1,5 +1,7 @@
 # MITCH Index Message Specification
 
+*Part of the [MITCH Protocol](./overview.md) | Message Type: `'i'` | See [Messaging Architecture](./messaging.md)*
+
 ## Overview
 
 Index messages (`i`) provide synthetic aggregated market data reflecting the state of a financial instrument across all markets. These enriched messages combine data from multiple sources with additional metrics for volatility, liquidity, trend analysis, and data quality assessment.

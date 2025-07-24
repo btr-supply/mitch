@@ -1,0 +1,73 @@
+[package]
+name = "mitch"
+version = "0.1.0"
+edition = "2021"
+authors = ["BTR Supply <support@btr.supply>"]
+description = "MITCH (Moded ITCH) protocol implementation in Rust"
+license = "MIT"
+keywords = ["finance", "market-data", "high-frequency", "low-latency"]
+categories = ["encoding", "network-programming"]
+
+[lib]
+name = "mitch"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+
+[dependencies]
+criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
+tokio = { version = "1.40", features = ["full"], optional = true }
+redis = { version = "0.27", features = ["tokio-comp", "connection-manager", "streams"], optional = true }
+lazy_static = { version = "1.4", optional = true }
+libc = { version = "0.2", optional = true }
+wtransport = { version = "0.6", optional = true }
+rcgen = { version = "0.13", optional = true }
+url = { version = "2.5", optional = true }
+http = { version = "1.1", optional = true }
+async-trait = { version = "0.1", optional = true }
+futures = { version = "0.3", optional = true }
+thiserror = { version = "1.0", optional = true }
+serde = { version = "1.0", features = ["derive"], optional = true }
+chrono = "0.4"
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[dependencies.sysinfo]
+version = "0.30"
+optional = true
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"  # Required for FFI safety
+
+[profile.bench]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+debug = false
+
+[features]
+default = ["std"]
+std = []
+no_std = []
+ffi = ["lazy_static", "libc"]
+
+# Networking features
+networking = ["tokio", "async-trait", "thiserror", "serde", "futures", "url", "http"]
+redis-client = ["networking", "redis"]
+webtransport-client = ["networking", "wtransport", "rcgen"]
+all-networking = ["redis-client", "webtransport-client"]
+benchmarking = ["sysinfo"]
+
+[[bin]]
+name = "webtransport_server"
+required-features = ["webtransport-client", "benchmarking"]
+
+[[bin]]
+name = "benchmark"
+required-features = ["networking", "benchmarking"]
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3", features = ["winuser", "consoleapi", "processthreadsapi"], optional = true }

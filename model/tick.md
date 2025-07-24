@@ -1,5 +1,7 @@
 # MITCH Tick Message Specification
 
+*Part of the [MITCH Protocol](./overview.md) | Message Type: `'s'` | See [Messaging Architecture](./messaging.md)*
+
 ## Overview
 
 Tick messages (`s`) provide point-in-time bid/ask ticker snapshots representing the best prices and activity in a market. They capture the essential level-1 (top of book) data.

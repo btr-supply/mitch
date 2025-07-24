@@ -28,18 +28,14 @@
 
 ## Protocol Specifications
 
-### Core Components
-- **[Protocol Overview](./model/overview.md)**: High-level design principles and architecture
-- **[Messaging Architecture](./model/messaging.md)**: Unified header format and batching
-- **[Ticker ID System](./model/ticker.md)**: 8-byte encoding for any financial instrument
-- **[Asset Classification](./model/asset.md)**: Standardized asset class and instrument types
+**📖 Complete Protocol Documentation**: [model/overview.md](./model/overview.md)
 
-### Message Types
-- **[Trade Messages](./model/trade.md)**: Executed transaction data (32 bytes)
-- **[Order Messages](./model/order.md)**: Order lifecycle events (32 bytes)
-- **[Tick Messages](./model/tick.md)**: Bid/ask price snapshots (32 bytes)
-- **[Index Messages](./model/index.md)**: Synthetic aggregated market data (64 bytes)
-- **[Order Books](./model/order-book.md)**: Traditional and optimized order book formats
+| Component | Description |
+|-----------|-------------|
+| **[Messaging](./model/messaging.md)** | Unified 8-byte header, batching, Channel IDs |
+| **[Ticker IDs](./model/ticker.md)** | 8-byte encoding for any financial instrument |
+| **[Assets](./model/asset.md)** | Standardized asset classification system |
+| **[Message Types](./model/overview.md#message-types)** | Trade, Order, Tick, Index, OrderBook formats |
 
 ## Implementation Languages
 
@@ -53,87 +49,25 @@ Complete reference implementations in `./impl/`:
 
 ## Performance Characteristics
 
-### Message Sizes
-- **Header**: 8 bytes (all message types)
-- **Trade/Order/Tick**: 32 bytes each
-- **Index**: 64 bytes (enriched with analytics)
-- **Order Book**: 2,072 bytes (complete market depth)
+- **Message Sizes**: 8-byte header + 32/64/2072-byte bodies
+- **Serialization**: 10-20x faster with zero-copy operations  
+- **Bandwidth**: 40% reduction vs. standard ITCH
+- **Memory**: Fixed-size, 8-byte aligned structures
 
-### Throughput Benchmarks
-- **Serialization**: 10-20x faster with unsafe casting
-- **Network Efficiency**: 40% reduction in bandwidth vs. standard ITCH
-- **Memory Usage**: Fixed-size structures for predictable allocation
-- **Cache Performance**: 8-byte aligned, single cache line access
+*See [Performance Details](./model/overview.md#performance--implementation) for optimization strategies.*
 
 ## Getting Started
 
-### 1. Choose Your Implementation
-Select the appropriate reference implementation from `./impl/` based on your target environment.
+1. **📖 Study the Protocol**: Start with [Protocol Overview](./model/overview.md)
+2. **💻 Choose Implementation**: Select from `./impl/` (Rust, TypeScript, MQL4)
+3. **🚀 Build Your First App**: See examples below and in `./impl/examples/`
 
-### 2. Study the Protocol
-- Start with [Protocol Overview](./model/overview.md)
-- Review [Messaging Architecture](./model/messaging.md)
-- Understand [Ticker ID System](./model/ticker.md)
+*Complete implementation guide: [Protocol Overview](./model/overview.md#getting-started)*
 
-### 3. Implement Message Types
-- Begin with [Trade Messages](./model/trade.md) for basic market data
-- Add [Tick Messages](./model/tick.md) for real-time quotes
-- Include [Index Messages](./model/index.md) for multi-market aggregation
+## Quick Examples
 
-### 4. Add Advanced Features
-- Implement [Order Messages](./model/order.md) for order management
-- Use [Order Books](./model/order-book.md) for market depth
-- Add Channel IDs for pub/sub routing
-
-## Architecture
-
-### Project Structure
-```
-mitch/
-├── README.md              # This file - getting started guide
-├── model/                 # Protocol specifications
-│   ├── overview.md        # High-level protocol overview
-│   ├── messaging.md       # Unified header and batching
-│   ├── ticker.md          # 8-byte ticker ID system
-│   ├── asset.md           # Asset classification system
-│   ├── trade.md           # Trade message specification
-│   ├── order.md           # Order message specification
-│   ├── tick.md            # Tick message specification
-│   ├── index.md           # Index message specification
-│   └── order-book.md      # Order book specifications
-├── impl/                  # Reference implementations
-│   ├── mitch.rs           # Rust implementation
-│   ├── mitch.ts           # TypeScript implementation
-│   ├── mitch.mq4          # MQL4 implementation
-│   └── examples/          # Usage examples per language
-├── bins/                  # Order book aggregation bin definitions
-└── ids/                   # Reference data (currencies, assets, exchanges)
-```
-
-## Use Cases
-
-### Real-Time Trading Systems
-- **High-frequency trading**: Sub-microsecond message processing
-- **Multi-exchange arbitrage**: Cross-venue price discovery with Index messages
-- **Risk management**: Real-time position monitoring with aggregated data
-
-### Market Data Distribution  
-- **Pub/Sub filtering**: Clients subscribe to specific instrument/venue combinations
-- **Topic-based routing**: Efficient Kafka/Redis topic organization using Channel IDs
-- **Bandwidth optimization**: Transmit only required data streams
-
-### Analytics & Research
-- **Market microstructure**: Analyze spreads, liquidity, and force metrics
-- **Cross-venue analysis**: Compare execution quality across exchanges
-- **Data quality monitoring**: Use confidence scores for research reliability
-
-## Examples
-
-### Basic Message Creation (Rust)
+### Basic Trade Message (Rust)
 ```rust
-use mitch::*;
-
-// Create a trade message
 let trade = Trade {
     ticker_id: 0x03006F301CD00000,  // EUR/USD spot
     price: 1.08750,
@@ -142,25 +76,17 @@ let trade = Trade {
     side: OrderSide::Buy,
     _padding: [0; 7],
 };
-
-// Pack for network transmission
-let bytes = trade.pack(); // 32 bytes, ultra-fast
+let bytes = trade.pack(); // 32 bytes, zero-copy
 ```
 
-### Channel-Based Pub/Sub (TypeScript)
+### Pub/Sub Filtering (TypeScript)
 ```typescript
 // Subscribe to Binance EUR/USD ticks
-const channelId = Channel.generate(101, 's'); // Binance + ticks
-subscriber.subscribe(channelId.toString()); // "6648576"
-
-// Process incoming messages
-subscriber.on('message', (data) => {
-    const message = MitchMessage.fromBytes(data);
-    if (message.type === 'tick') {
-        updatePriceDisplay(message.body);
-    }
-});
+const channelId = Channel.generate(101, 's');
+subscriber.subscribe(channelId.toString());
 ```
+
+*Complete examples and use cases: [Protocol Overview](./model/overview.md)*
 
 ## Contributing
 

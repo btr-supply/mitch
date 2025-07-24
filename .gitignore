@@ -28,15 +28,38 @@ node_modules/
 *.so
 *.exe
 
-# Start of Selection
-# Ignore build artifacts
+# Ignore Rust and Cargo build artifacts
 /target
-/build
-*.rlib
-# Exclude all nested build artifacts
 **/target
+/build
 **/build
-# End of Selection
+*.rlib
+*.lock
+Cargo.lock
+Cargo.toml.orig
+.cargo/
+.cargo-vcs/
+*.rs.bk
+*.rs.swp
+
+# Ignore Rust coverage and test output
+htmlcov/
+coverage/
+*.profraw
+*.profdata
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore JetBrains/IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Ignore Claude AI files
+.claude/
+
+# Ignore Cursor editor files
+.cursor/
 
 # Ignore Go build files
 *.exe

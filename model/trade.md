@@ -1,5 +1,7 @@
 # MITCH Trade Message Specification
 
+*Part of the [MITCH Protocol](./overview.md) | Message Type: `'t'` | See [Messaging Architecture](./messaging.md)*
+
 ## Overview
 
 Trade messages (`t`) represent executed transactions in a market, capturing price, volume, participant, and timing information.

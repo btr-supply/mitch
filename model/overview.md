@@ -36,6 +36,7 @@
 - **[Ticker ID System](./ticker.md)**: 8-byte encoding for any financial instrument
 - **[Asset Classification](./asset.md)**: Standardized asset class and instrument type system
 - **[Messaging Format](./messaging.md)**: Unified header and batching architecture
+- **[Channel ID System](./messaging.md#channel-id-system)**: 32-bit pub/sub filtering and routing
 - **[Order Book Aggregation](./order-book.md)**: Ultra-light 2KB order book with configurable bins
 
 ## Implementation Languages
@@ -93,12 +94,106 @@ MITCH uses standard, fixed-width data types. All multi-byte fields MUST be encod
 | `u64`    | 8            | 64-bit unsigned integer              |
 | `f64`    | 8            | 64-bit IEEE 754 floating-point number|
 
+## Performance & Implementation
+
+### Optimization Strategies
+- **Unsafe Memory Casting**: Direct `unsafe { std::mem::transmute() }` for byte-aligned structs (10-20x faster)
+- **Bit Manipulation**: Manual operations for non-byte-aligned fields (Ticker/Channel IDs)
+- **Memory Alignment**: 32-byte padding (64-byte for Index, 2072-byte for OrderBook)
+
+### Architecture Requirements
+- **Little-Endian**: x86_64, ARM64, RISC-V architectures
+- **8-byte alignment**: Fixed-width fields for zero-copy operations
+- **Confidence Metrics**: Data quality 0-100 (95-100: <10ms latency, <2% rejections)
+
 ## Getting Started
 
-1. **Choose Implementation**: Select language-specific model from `../impl/`
-2. **Review Message Specs**: Study relevant message type documentation
-3. **Implement Pack/Unpack**: Use provided serialization functions
-4. **Add Channel IDs**: Implement pub/sub filtering as needed
-5. **Test Integration**: Validate against example implementations
+### 1. Understand the Protocol
+- **Core Concepts**: Fixed-width binary format, zero-copy operations
+- **Message Structure**: 8-byte header + typed message bodies
+- **Key Benefits**: 40% lighter than ITCH, 10-20x faster serialization
 
-For detailed specifications, see the individual message type documentation linked above.
+### 2. Study Core Components
+- **[Messaging Architecture](./messaging.md)**: Headers, batching, Channel IDs
+- **[Ticker ID System](./ticker.md)**: 8-byte encoding for any financial instrument  
+- **[Asset Classification](./asset.md)**: Standardized asset class system
+
+### 3. Implement Message Types
+- **Start with**: [Trade Messages](./trade.md) for basic market data
+- **Add**: [Tick Messages](./tick.md) for real-time quotes  
+- **Advanced**: [Index Messages](./index.md) for multi-market aggregation
+- **Optional**: [Order Messages](./order.md) and [Order Books](./order-book.md)
+
+### 4. Choose Your Implementation
+- **Rust**: `../impl/mitch.rs` - Reference implementation
+- **TypeScript**: `../impl/mitch.ts` - Web/Node.js environments
+- **MQL4**: `../impl/mitch.mq4` - MetaTrader systems
+
+### 5. Add Advanced Features
+- **Channel IDs**: Implement [pub/sub filtering](./messaging.md#channel-id-system)
+- **Performance**: Apply [optimization strategies](#performance--implementation)
+- **Examples**: Study `../impl/examples/` for your language
+
+## Use Cases
+
+### Real-Time Trading Systems
+- **High-frequency trading**: Sub-microsecond message processing
+- **Multi-exchange arbitrage**: Cross-venue price discovery with Index messages  
+- **Risk management**: Real-time position monitoring with aggregated data
+
+### Market Data Distribution
+- **Pub/sub filtering**: Clients subscribe to specific instrument/venue combinations
+- **Topic-based routing**: Efficient Kafka/Redis topic organization using Channel IDs
+- **Bandwidth optimization**: Transmit only required data streams
+
+### Analytics & Research
+- **Market microstructure**: Analyze spreads, liquidity, and force metrics
+- **Cross-venue analysis**: Compare execution quality across exchanges
+- **Data quality monitoring**: Use confidence scores for research reliability
+
+## Implementation Examples
+
+### Complete Message Processing (Rust)
+```rust
+use mitch::*;
+
+// Create and pack a trade message
+let trade = Trade {
+    ticker_id: 0x03006F301CD00000,  // EUR/USD spot
+    price: 1.08750,
+    quantity: 1000000,
+    trade_id: 123456,
+    side: OrderSide::Buy,
+    _padding: [0; 7],
+};
+
+// Zero-copy serialization
+let bytes = trade.pack(); // 32 bytes, instant
+
+// Channel-based routing
+let channel_id = Channel::generate(101, b't'); // Binance trades
+publish_to_channel(channel_id, &bytes);
+```
+
+### Pub/Sub Integration (TypeScript)
+```typescript
+// Subscribe to specific market data streams
+const binanceTicks = Channel.generate(101, 's');
+const nyseIndices = Channel.generate(861, 'i');
+
+subscriber.subscribe([binanceTicks, nyseIndices]);
+
+// Process incoming messages with type safety
+subscriber.on('message', (channelId, data) => {
+    const message = MitchMessage.fromBytes(data);
+    
+    switch (message.type) {
+        case 'tick':
+            updatePriceDisplay(message.body);
+            break;
+        case 'index':
+            updateMarketAnalytics(message.body);
+            break;
+    }
+});
+```

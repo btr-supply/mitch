@@ -1,4 +1,4 @@
-mitch_id,name,aliases
+id,name,aliases
 00001,0x Protocol,ZRX
 00101,1inch Network,1INCH
 00201,AAVE GHO,GHO
@@ -26,7 +26,7 @@ mitch_id,name,aliases
 02401,Bitcoin BEP2,BTCB
 02501,Bitcoin Cash,BCH
 02601,Bitcoin SV,BSV
-02701,Bitcoin,BTC
+02701,Bitcoin,BTC|XBT
 02801,Bitfinex LEO,LEO
 02901,Bitget Token,BGB
 03001,BitMart Token,BMX
@@ -131,7 +131,7 @@ mitch_id,name,aliases
 12901,Polygon,POL
 13001,Pyth Network,PYTH
 13101,QuickSwap,QUICK
-13201,Raydium Exchamge,RAY
+13201,Raydium Exchange,RAY
 13301,Renzo Restaked ETH,ezETH
 13401,Reserve Dollar,RSV
 13501,Reserve Rights,RSR

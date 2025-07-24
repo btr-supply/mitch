@@ -1,5 +1,7 @@
 # MITCH Order Message Specification
 
+*Part of the [MITCH Protocol](./overview.md) | Message Type: `'o'` | See [Messaging Architecture](./messaging.md)*
+
 ## Overview
 
 Order messages (`o`) represent order lifecycle events in financial markets, capturing order placement, modification, and cancellation events.

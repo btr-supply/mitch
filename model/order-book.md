@@ -1,5 +1,7 @@
 # MITCH Order Book Specification
 
+*Part of the [MITCH Protocol](./overview.md) | Message Type: `'b'` | See [Messaging Architecture](./messaging.md)*
+
 ## Overview
 
 OrderBook messages (`b`) provide comprehensive order book depth (level 2) within adaptive bins for efficient liquidity aggregation.
